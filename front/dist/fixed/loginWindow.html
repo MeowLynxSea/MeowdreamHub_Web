@@ -1,0 +1,42 @@
+<div class="loginWindow container">
+    <div class="row" style="width: 800px;">
+        <!-- Close Button -->
+        <div id="closeWindowButton" class="close-button" onclick="closeWindow()">
+            <img src="/assets/image/icons-24/x.svg" alt="Close">
+        </div>
+        <!-- Left Half -->
+        <div class="col-sm-12 offset-sm-0 col-md-4 offset-md-1 content-left">
+            <div class="content">
+                <h2 class="text-center text-light inwindow-x">登录</h2>
+                <div class="separator"></div>
+                <!-- Separator -->
+                <p class="text-center inwindow">现在登录到喵梦互联以继续</p>
+                <p class="copyright text-center inwindow">Copyright © 2024 Meowdream.</p>
+            </div>
+        </div>
+        <!-- Right Half -->
+        <div class="col-md-7 content-right">
+            <div class="content content-r">
+                <form>
+                    <div class="form-group">
+                        <label for="inputEmail" class="form-label inwindow">账户</label>
+                        <input type="email" class="form-control inwindow" id="inputEmail" placeholder="请输入邮箱">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword" class="form-label inwindow">密码</label>
+                        <input type="password" class="form-control inwindow" id="inputPassword" placeholder="请输入密码">
+                    </div>
+                    <div class="form-group">
+                        <div class="alert alert-danger alert-dismissible fade show inwindow" style="display: none;"></div>
+                    </div>
+                    <div class="form-group button-group inwindow">
+                        <button type="button" class="btn btn-secondary inwindow" hx-get="/fixed/registerWindow.html" hx-target="#upperWindow" hx-trigger="click" hx-indicator="#loader" hx-swap="innerHTML">去注册</button>
+                        <div style="width: 10px;"></div>
+                        <!-- Spacer -->
+                        <button type="submit" class="btn btn-primary inwindow">登录</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

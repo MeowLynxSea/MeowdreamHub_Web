@@ -1,0 +1,129 @@
+.loginWindow.container {
+    width: 800px;
+    height: 600px;
+    /* Remove margin and padding */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.content-left,
+.content-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    /* Ensure content takes up full height */
+}
+
+.content-r {
+    width: 70%;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+
+/* Custom CSS for separating line */
+
+.separator {
+    border-top: 1px solid #ccc;
+    margin: 10px 0;
+}
+
+
+/* Custom CSS to ensure buttons are on the same row */
+
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    /* Ensure the button group takes up full width */
+}
+
+.button-group button {
+    flex: 1;
+    /* Make both buttons equally distribute the available space */
+    margin: 0 5px;
+    /* Add some margin between the buttons */
+    min-width: 100px;
+    /* Set minimum width for buttons */
+}
+
+.form-control {
+    width: 100%;
+    /* Set width of input fields to fill available space */
+}
+
+
+/* Custom CSS for close button */
+
+.close-button {
+    position: absolute;
+    top: 12px;
+    /* Adjust top margin */
+    right: 12px;
+    /* Adjust right margin */
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    border: 1.5px solid var(--gray-800);
+    /* Add border */
+    border-radius: 8px;
+    /* Add border radius */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    /* Add box shadow */
+    transition: border-color 0.2s;
+}
+
+.close-button:hover {
+    border-color: var(--gray-600);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
+    transition: border-color 0.2s;
+}
+
+.close-button img {
+    width: 16px;
+    height: 16px;
+    /* Set image size */
+    fill: white;
+    /* Set fill color */
+}
+
+
+/* Custom CSS for small text */
+
+.copyright {
+    position: absolute;
+    bottom: 8px;
+    left: 24px;
+    color: #666;
+    font-size: 12px;
+}
+
+@media only screen and (max-width: 767px) {
+    /* Adjust font size for mobile devices */
+    .inwindow-x {
+        font-size: xx-large;
+        /* 标题字体大小 */
+    }
+    .inwindow {
+        font-size: x-large;
+        /* 文本字体大小 */
+    }
+}

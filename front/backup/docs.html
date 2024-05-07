@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meowdream - Docs</title>
+    <!-- Bootstrap CSS -->
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <!-- htmx JS -->
+    <script src="/assets/js/htmx.min.js"></script>
+
+    <link rel="stylesheet" href="/assets/css/highlight.js/monokai-sublime.css">
+    <script src="/assets/js/highlight.min.js"></script>
+
+    <link href="/assets/css/meowdream-better-links.css" rel="stylesheet">
+    <link href="/assets/css/meowdream-colors.css" rel="stylesheet">
+    <style>
+        #openListButton {
+            width: 40px;
+            height: 40px;
+            background-color: #9b9b9b;
+            background-image: url('/assets/image/icons-24/list.svg');
+            background-repeat: no-repeat;
+            background-size: 60%;
+            background-position: center;
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+        }
+        
+        #scrollTopButton {
+            width: 40px;
+            height: 40px;
+            background-color: #9b9b9b;
+            background-image: url('/assets/image/icons-24/chevrons-up.svg');
+            background-repeat: no-repeat;
+            background-size: 60%;
+            background-position: center;
+            position: fixed;
+            bottom: 90px;
+            right: 32px;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        
+        #homeButton {
+            width: 40px;
+            height: 40px;
+            background-color: #9b9b9b;
+            background-image: url('/assets/image/icons-24/home.svg');
+            background-repeat: no-repeat;
+            background-size: 60%;
+            background-position: center;
+            position: fixed;
+            bottom: 32px;
+            right: 90px;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+        }
+        
+        #openListButton:hover {
+            background-color: #424242;
+        }
+        
+        #scrollTopButton:hover {
+            background-color: #424242;
+        }
+        
+        #homeButton:hover {
+            background-color: #424242;
+        }
+        
+        #scrollTopButton.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container py-4">
+        <div class="row my-5">
+            <h1>Meowdream Docs</h1>
+        </div>
+        <hr class="divider">
+        <div class="row mt-4">
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="listOffcanvas" aria-labelledby="listOffcanvasLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasExampleLabel">目录</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="scrollable-content-problem mb-0 offcanvas-body" style="overflow-y: auto;">
+                    <div id="left-list" class="nav nav-pills flex-column"></div>
+                </div>
+            </div>
+            <div class="col">
+                <!-- 文档内容区域 -->
+                <div class="scrollable-content-problem mb-0" style="overflow-y: auto;">
+                    <div id="document-content" class="px-3">
+                        <!-- 内容将动态加载到这里 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button id="openListButton" class="rounded-circle btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#listOffcanvas" aria-controls="listOffcanvas"></button>
+    <button id="scrollTopButton" class="rounded-circle btn" type="button" onclick="scrollToTop()"></button>
+    <button id="homeButton" class="rounded-circle btn" type="button" onclick="window.location.href = '/';"></button>
+
+    <!-- Bootstrap JS -->
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+
+    <!-- marked JS -->
+    <script src="/assets/js/marked.min.js"></script>
+
+    <!-- Custom Renderer -->
+    <script src="/assets/js/meowdream-custom-md-renderer.js"></script>
+
+    <script>
+        window.onscroll = function() {
+            scrollFunction();
+        };
+
+        function scrollFunction() {
+            var scrollTopButton = document.getElementById("scrollTopButton");
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                scrollTopButton.classList.add("show");
+            } else {
+                scrollTopButton.classList.remove("show");
+            }
+        }
+
+        // 滚动到顶部的函数
+        function scrollToTop() {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        }
+
+        function parseList() {
+            fetch("/docs/list.txt")
+                .then(response => response.text())
+                .then(data => {
+                    const lines = data.split("\n");
+                    const listContainer = document.getElementById("left-list");
+                    listContainer.innerHTML = ""; // 清空容器
+
+                    let countPlus = 0; // 用于跟踪+的数量
+                    let textBuffer = ""; // 用于暂存文本
+                    lines.forEach(line => {
+                        line = line.trim(); // 去除首尾空白字符
+                        if (line === "") {
+                            return; // 忽略空行
+                        }
+                        if (/^={3,}$|^-{3,}$/.test(line)) {
+                            // 渲染为分隔线
+                            const divider = document.createElement("hr");
+                            divider.classList.add("divider");
+                            listContainer.appendChild(divider);
+                        } else if (/^\+{1,3}(.*?)$/.test(line)) {
+                            countPlus = line.match(/\+/g).length;
+                            textBuffer = line.replace(/^\+{1,3}/, "").trim();
+                            // 渲染为标题
+                            if (countPlus > 0) {
+                                const listItem = document.createElement("li");
+                                listItem.classList.add("nav-item", "leftList-title");
+                                const link = document.createElement("a");
+                                link.classList.add("nav-link", "disabled");
+                                link.style.fontSize = countPlus === 1 ? "larger" : countPlus === 2 ? "x-large" : "xx-large";
+                                link.href = "#";
+                                link.textContent = textBuffer.trim();
+                                listItem.appendChild(link);
+                                listContainer.appendChild(listItem);
+                            }
+                            // 重置计数器和文本缓冲
+                        } else if (/^\((.*?)\)\[(.*?)\]$/.test(line)) {
+                            // 渲染为带链接的列表项
+                            const match = line.match(/^\((.*?)\)\[(.*?)\]$/);
+                            const text = match[1];
+                            const link = match[2];
+                            const listItem = document.createElement("li");
+                            listItem.classList.add("nav-item", "leftList-link");
+                            listItem.id = link;
+                            listItem.onclick = function() {
+                                loadMarkdown(this.id);
+                            };
+                            const anchor = document.createElement("a");
+                            anchor.classList.add("nav-link");
+                            anchor.href = "#";
+                            anchor.textContent = text;
+                            listItem.appendChild(anchor);
+                            listContainer.appendChild(listItem);
+                        } else {
+                            // 默认情况渲染为普通列表项
+                            const listItem = document.createElement("li");
+                            listItem.classList.add("nav-item");
+                            const anchor = document.createElement("a");
+                            anchor.classList.add("nav-link", "disabled");
+                            anchor.href = "#";
+                            anchor.textContent = line.trim();
+                            listItem.appendChild(anchor);
+                            listContainer.appendChild(listItem);
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching or parsing data:', error);
+                });
+        }
+
+
+        parseList();
+
+        marked.use({
+            renderer: customRenderer
+        });
+
+        // 加载Markdown文档并渲染到document-content区域
+        function loadMarkdown(url) {
+            fetch(url)
+                .then(response => {
+                    if (response.ok) {
+                        // 返回一个 Promise，等待响应的文本
+                        return response.text();
+                    } else {
+                        // 如果响应不ok，返回一个包含404错误信息的Promise
+                        return Promise.reject('Error 404 NOT FOUND');
+                    }
+                })
+                .then(markdownText => {
+                    // 将Markdown文本转换为HTML
+                    var html = marked.parse(markdownText);
+                    // 将HTML渲染到document-content区域
+                    document.getElementById('document-content').innerHTML = html;
+                    hljs.highlightAll();
+                    scrollToTop();
+                })
+                .catch(error => {
+                    console.error('Error loading Markdown document:', error);
+                    // 如果发生错误，渲染404错误信息
+                    var html = marked.parse("# Error 404 NOT FOUND\n**您要找的页面似乎被猫猫叼走了呢...**\n\n[返回主页](InPage:/docs/welcome.md)\n\n<br />\n\n## POWERED BY\n![pic](/docs/logo-title.png)");
+                    document.getElementById('document-content').innerHTML = html;
+                });
+        }
+
+        // 更新scrollable-content的高度，使其底部始终与窗口底部保持50px距离
+        function updateScrollableContentHeight() {
+            const windowHeight = window.innerHeight;
+            document.querySelectorAll('.scrollable-content').forEach(function(element) {
+                const newHeight = windowHeight - element.offsetTop - 25;
+                element.style.height = `${newHeight}px`;
+            });
+        }
+
+        // 当窗口大小发生变化时更新scrollable-content的高度
+        window.addEventListener('resize', updateScrollableContentHeight);
+
+        document.addEventListener("DOMContentLoaded", function(event) {
+            var urlParams = new URLSearchParams(window.location.search);
+            var readParam = urlParams.get('read');
+            if (readParam) {
+                // 调用loadMarkdown函数并传入read参数的值
+                loadMarkdown(readParam);
+            } else {
+                loadMarkdown("/docs/welcome.md");
+            }
+            // 初始更新scrollable-content的高度
+            updateScrollableContentHeight();
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meowdream</title>
+    <!-- Bootstrap CSS -->
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/assets/css/meowdream-colors.css" rel="stylesheet">
+    <link href="/assets/css/meowdream-login-window.css" rel="stylesheet">
+    <link href="/assets/css/meowdream-better-links.css" rel="stylesheet">
+    <script src="/assets/js/meowdream-fetch-fix.js"></script>
+    <style>
+        body {
+            color: var(--white);
+            /* 设置文字颜色为白色 */
+            margin: 0;
+            /* 清除body默认margin */
+            overflow: hidden;
+            /* 防止video溢出 */
+        }
+        
+        #backgroundLayer {
+            position: fixed;
+            overflow: hidden;
+            /* 使用fixed来保证video全屏覆盖 */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            /* 将video放在最底层 */
+        }
+        
+        video {
+            position: relative;
+            left: -10%;
+            top: -10%;
+            width: 120%;
+            height: 120%;
+            object-fit: cover;
+            /* 让video充满整个容器 */
+            object-position: center;
+            /* 使视频在容器中居中 */
+            filter: blur(5px) brightness(0.4);
+            /* 添加模糊效果和降低亮度 */
+        }
+        
+        .center-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            /* 将内容置于视频之上 */
+            text-align: center;
+        }
+        
+        #upperWindow {
+            position: absolute;
+            /* 将upperWindow设置为绝对定位 */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 600px;
+            background-color: var(--gray-750);
+            /* 设置upperWindow颜色为--gray-750 */
+            padding: 0px;
+            border-radius: 20px;
+            z-index: 1000;
+            opacity: 0;
+            /* 初始隐藏状态 */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.2);
+            /* 投影颜色适应背景色 */
+            /* 外发光和投影效果 */
+            transition: opacity 0.3s ease 0.1s;
+            /* 添加渐显动画，时长为0.6秒 */
+            visibility: hidden;
+            /* 初始隐藏状态 */
+        }
+        /* HTML: <div class="loader"></div> */
+        
+        .loader {
+            width: 50px;
+            padding: 8px;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: #25b09b;
+            --_m: conic-gradient(#0000 10%, #000), linear-gradient(#000 0 0) content-box;
+            -webkit-mask: var(--_m);
+            mask: var(--_m);
+            -webkit-mask-composite: source-out;
+            mask-composite: subtract;
+            animation: l3 1s infinite linear;
+            display: none;
+        }
+        
+        @keyframes l3 {
+            to {
+                transform: rotate(1turn)
+            }
+        }
+        /* 遮罩 */
+        
+        #overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--gray-900);
+            filter: blur(5px);
+            /* 设置遮罩层颜色为--gray-900 */
+            z-index: 999;
+            /* 在上面的元素之上 */
+            opacity: 0;
+            /* 初始隐藏状态 */
+            visibility: hidden;
+            /* 初始隐藏状态 */
+            transition: opacity 0.3s;
+            /* 添加渐显动画，时长为0.6秒，延迟0.5秒开始 */
+        }
+        
+        footer {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            font-size: 14px;
+            color: var(--gray-500);
+        }
+        
+        @media only screen and (max-width: 768px) {
+            #upperWindow {
+                transform: translate(-50%, -50%) scale(0.5);
+                transform-origin: center;
+            }
+            .navbar {
+                background-color: rgba(0, 0, 0, 0.1) !important;
+            }
+            .nav-item {
+                height: 50px;
+            }
+        }
+        
+        @media only screen and (min-width: 768px) {
+            .navbar-nav {
+                margin-right: 10vw;
+            }
+            .navbar {
+                background-color: transparent !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg" data-bs-theme="light">
+        <div class="container-fluid">
+            <!-- 左侧品牌 logo -->
+            <a class="navbar-brand col-8 col-md-auto" href="https://meowdream.cn" target="_blank">
+                <img class="img-fluid my-3 my-md-5" src="/assets/image/logo-title-light.png" alt="Meowdream" style="transform: scale(0.65); width: 100%;">
+            </a>
+
+            <!-- 右侧链接 -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item mx-3">
+                        <a class="nav-link text-white-50" href="#">定价</a>
+                    </li>
+
+                    <li class="nav-item mx-3">
+                        <a class="nav-link text-white-50" href="#">服务</a>
+                    </li>
+
+                    <li class="nav-item mx-3">
+                        <a class="nav-link text-white-50" href="#">支持</a>
+                    </li>
+
+                    <li class="nav-item mx-3">
+                        <button style="border-radius: 30% / 100%;" class="btn btn-primary btn-in-nav mx-1" hx-get="/fixed/loginWindow.html" hx-target="#upperWindow" hx-trigger="click" hx-indicator="#loader" hx-swap="innerHTML" onclick="showUpperWindow()">
+                  <span style="margin: 0 5px;"></span>开始使用<span style="margin: 0 5px;"></span>
+                </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div style="margin-bottom: 15vh;"></div>
+        <h1 class="display-5 text-white my-3">Meowdream Hub</h1>
+        <h1 class="display-2 text-white my-4">简单、高效的</h1>
+        <h2 class="display-4 text-white mt-3 mb-5">Minecraft服务器管理解决方案</h2>
+        <button style="border-radius: 30% / 100%;" class="btn btn-primary btn-lg mx-1" hx-get="/fixed/loginWindow.html" hx-target="#upperWindow" hx-trigger="click" hx-indicator="#loader" hx-swap="innerHTML" onclick="showUpperWindow()">
+            <span style="margin: 0 5px;"></span>开始使用<span style="margin: 0 5px;"></span>
+        </button>
+        <button style="border-radius: 30% / 100%;" class="btn btn-secondary btn-lg mx-1" onclick="window.location.href = '/docs.html';">
+            <span style="margin: 0 5px;"></span>阅读文档<span style="margin: 0 5px;"></span>
+        </button>
+    </div>
+
+    <!-- 背景图层 -->
+    <div id="backgroundLayer">
+        <video autoplay muted loop>
+            <source src="/assets/video/empty-background-icey-island.mp4" type="video/mp4">
+            你的浏览器不支持该功能
+        </video>
+    </div>
+
+    <!-- Overlay -->
+    <div id="overlay"></div>
+
+    <!-- Upper Window -->
+    <div id="upperWindow"></div>
+
+    <!-- Loader -->
+    <div id="loader" class="loader htmx-indicator"></div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+    <!-- htmx -->
+    <script src="/assets/js/htmx.min.js"></script>
+    <script>
+        function showUpperWindow() {
+            document.getElementById('overlay').style.visibility = 'visible';
+            document.getElementById('overlay').style.opacity = '0.75'; /* 设置遮罩层透明度为60% */
+            document.getElementById('upperWindow').style.visibility = 'visible';
+            document.getElementById('upperWindow').style.opacity = '1'; /* 设置upperWindow透明度为100% */
+        }
+
+        function closeWindow() {
+            document.getElementById('overlay').style.opacity = '0'; /* 设置遮罩透明度为0，触发渐隐效果 */
+            document.getElementById('upperWindow').style.opacity = '0'; /* 设置upperWindow透明度为0，触发渐隐效果 */
+            setTimeout(function() {
+                document.getElementById('overlay').style.visibility = 'hidden';
+                document.getElementById('upperWindow').style.visibility = 'hidden';
+            }, 600); // 等待0.6秒（与动画时长相同）后隐藏元素
+        }
+    </script>
+
+    <!-- Copyright -->
+    <footer>
+        Copyright © 2024 Meowdream. All Rights Reserved.
+    </footer>
+</body>
+
+</html>

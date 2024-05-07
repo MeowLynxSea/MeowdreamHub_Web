@@ -1,0 +1,2 @@
+import math_rand as rand;
+import os;

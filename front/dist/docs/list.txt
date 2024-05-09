@@ -4,7 +4,14 @@
 (隐私政策)[/docs/privacy.md]
 (联系我们)[/docs/contact.md]
 ---
+++下载中心
+(插件)[/docs/download/plugin.md]
+---
 ++前端开发指南
 本文档仅供Meowdream Docs书写和开发使用
 (按钮)[/docs/docs/buttons.md]
 (目录编写指南)[/docs/docs/list.md]
+(记号)[/docs/docs/marks.md]
+---
+++法律信息
+(开放源代码许可)[/docs/license.md]

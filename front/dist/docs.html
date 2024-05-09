@@ -8,6 +8,7 @@
     <title>Meowdream - Docs</title>
     <!-- 引入 Bootstrap CSS -->
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/bootstrap-icons.min.css" rel="stylesheet">
     <!-- 引入 htmx JS -->
     <script src="/assets/js/htmx.min.js"></script>
     <!-- 引入 highlight.js CSS -->
@@ -17,61 +18,38 @@
     <!-- 引入自定义样式 -->
     <link href="/assets/css/meowdream-better-links.css" rel="stylesheet">
     <link href="/assets/css/meowdream-colors.css" rel="stylesheet">
+    <link href="/assets/css/meowdream-custom.css" rel="stylesheet">
     <script src="/assets/js/meowdream-fetch-fix.js"></script>
     <style>
         /* 自定义样式 */
         
-        #openListButton {
+        .roundButton {
             width: 40px;
             height: 40px;
-            background-color: #9b9b9b;
-            background-image: url('/assets/image/icons-24/list.svg');
-            background-repeat: no-repeat;
-            background-size: 60%;
-            background-position: center;
+            background-color: var(--gray-500);
             position: fixed;
-            bottom: 32px;
-            right: 32px;
             border: none;
             cursor: pointer;
             outline: none;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
         }
         
+        #openListButton {
+            bottom: 32px;
+            right: 32px;
+        }
+        
         #scrollTopButton {
-            width: 40px;
-            height: 40px;
-            background-color: #9b9b9b;
-            background-image: url('/assets/image/icons-24/chevrons-up.svg');
-            background-repeat: no-repeat;
-            background-size: 60%;
-            background-position: center;
-            position: fixed;
             bottom: 90px;
             right: 32px;
-            border: none;
-            cursor: pointer;
-            outline: none;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+            background-color: var(--gray-500);
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
         }
         
         #homeButton {
-            width: 40px;
-            height: 40px;
-            background-color: #9b9b9b;
-            background-image: url('/assets/image/icons-24/home.svg');
-            background-repeat: no-repeat;
-            background-size: 60%;
-            background-position: center;
-            position: fixed;
             bottom: 32px;
             right: 90px;
-            border: none;
-            cursor: pointer;
-            outline: none;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
         }
         
         #openListButton:hover {
@@ -123,9 +101,9 @@
         </div>
     </div>
     <!-- 操作按钮 -->
-    <button id="openListButton" class="rounded-circle btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#listOffcanvas" aria-controls="listOffcanvas"></button>
-    <button id="scrollTopButton" class="rounded-circle btn" type="button" onclick="scrollToTop()"></button>
-    <button id="homeButton" class="rounded-circle btn" type="button" onclick="window.location.href = '/';"></button>
+    <button id="openListButton" class="roundButton rounded-circle btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#listOffcanvas" aria-controls="listOffcanvas"><i class="bi-list"></i></button>
+    <button id="scrollTopButton" class="roundButton rounded-circle btn" type="button" onclick="scrollToTop()"><i class="bi bi-arrow-bar-up" style="color: white;"></i></button>
+    <button id="homeButton" class="roundButton rounded-circle btn" type="button" onclick="window.location.href = '/';"><i class="bi-house"></i></button>
     <!-- 引入 Bootstrap JS -->
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
     <!-- 引入 marked JS -->
@@ -288,6 +266,8 @@
             updateScrollableContentHeight();
         });
     </script>
+
+    <script src="/assets/js/meowdream-utils.js"></script>
 </body>
 
 </html>

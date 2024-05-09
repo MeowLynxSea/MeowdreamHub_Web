@@ -4,11 +4,8 @@ customRenderer.heading = function(text, level) {
     return `<h${level} class='my-4'>${text}</h${level}>`;
 };
 
-customRenderer.blockquote = function(quote) {
-    return `<blockquote class="blockquote" style="bg-color: red;">${quote}</blockquote>`;
-};
-
 customRenderer.paragraph = function(text) {
+    text = text.replace(/\[Copy\]([\s\S]*?)\[\/Copy\]/g, '<u><code class="copyable" title="点击复制" onclick="copyToClipboard(this.innerHTML)">$1</code></u>');
     return `<div class="my-3">${text}</div>`;
 };
 
@@ -40,7 +37,7 @@ customRenderer.image = function(href, title, text) {
 };
 
 customRenderer.blockquote = function(quote) {
-    return `<div class="my-3">${quote}</div>`;
+    return `<div class="my-3 blockquote">${quote}</div>`;
 };
 
 customRenderer.code = function(code, language, isEscaped) {

@@ -7,6 +7,7 @@
     <title>Meowdream</title>
     <!-- Bootstrap CSS -->
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/bootstrap-icons.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="/assets/css/meowdream-colors.css" rel="stylesheet">
     <link href="/assets/css/meowdream-login-window.css" rel="stylesheet">
@@ -201,10 +202,13 @@
         <h1 class="display-2 text-white my-4">简单、高效的</h1>
         <h2 class="display-4 text-white mt-3 mb-5">Minecraft服务器管理解决方案</h2>
         <button style="border-radius: 30% / 100%;" class="btn btn-primary btn-lg mx-1" hx-get="/fixed/loginWindow.html" hx-target="#upperWindow" hx-trigger="click" hx-indicator="#loader" hx-swap="innerHTML" onclick="showUpperWindow()">
-            <span style="margin: 0 5px;"></span>开始使用<span style="margin: 0 5px;"></span>
+            <span style="margin: 0 5px;"></span>开始使用<span style="margin: 0 5px;"></span><i class="bi-arrow-right"></i><span style="margin: 0 2px;"></span>
+        </button>
+        <button style="border-radius: 30% / 100%;" class="btn btn-secondary btn-lg mx-1" onclick="window.location.href = '/docs.html?read=/docs/download/readme.md';">
+            <span style="margin: 0 5px;"></span>下载中心<span style="margin: 0 5px;"></span><i class="bi-download"></i><span style="margin: 0 2px;"></span>
         </button>
         <button style="border-radius: 30% / 100%;" class="btn btn-secondary btn-lg mx-1" onclick="window.location.href = '/docs.html';">
-            <span style="margin: 0 5px;"></span>阅读文档<span style="margin: 0 5px;"></span>
+            <span style="margin: 0 5px;"></span>阅读文档<span style="margin: 0 5px;"></span><i class="bi-file-text"></i><span style="margin: 0 2px;"></span>
         </button>
     </div>
 

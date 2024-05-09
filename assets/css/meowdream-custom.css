@@ -1,0 +1,7 @@
+.copyable {
+    transition: filter 0.5s, box-shadow 0.5s;
+}
+
+.copyable:hover {
+    filter: brightness(0.8) drop-shadow(0 0 8px rgb(255, 255, 255));
+}

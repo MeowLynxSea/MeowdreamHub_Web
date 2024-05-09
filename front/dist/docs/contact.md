@@ -2,7 +2,7 @@
 
 QQ群：1018515932
 
-QQ频道：[点击加入](LinkButton:https://pd.qq.com/s/fw64wzzx9)
+QQ频道：[<i class="bi-tencent-qq"></i> 点击加入](LinkButton:https://pd.qq.com/s/fw64wzzx9)
 
 # 联系我们
 

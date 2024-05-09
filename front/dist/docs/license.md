@@ -18,7 +18,7 @@
     <div id="collapseBootstrap" class="accordion-collapse collapse" aria-labelledby="headingBootstrap" data-bs-parent="#accordionBootstrap" style="">
         <div class="accordion-body">
 
-The MIT License (MIT)
+##### The MIT License (MIT)
 
 Copyright (c) 2011-2024 The Bootstrap Authors
 
@@ -60,7 +60,7 @@ THE SOFTWARE.
     <div id="collapsehighlightjs" class="accordion-collapse collapse" aria-labelledby="headinghighlightjs" data-bs-parent="#accordionhighlightjs" style="">
         <div class="accordion-body">
 
-BSD 3-Clause License
+##### BSD 3-Clause License
 
 Copyright (c) 2006, Ivan Sagalaev.
 All rights reserved.
@@ -110,8 +110,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <div id="collapsehtmx" class="accordion-collapse collapse" aria-labelledby="headinghtmx" data-bs-parent="#accordionhtmx" style="">
         <div class="accordion-body">
 
-Zero-Clause BSD
-=============
+##### Zero-Clause BSD
 
 Permission to use, copy, modify, and/or distribute this software for
 any purpose with or without fee is hereby granted.
@@ -183,7 +182,7 @@ This software is provided by the copyright holders and contributors “as is” 
     <div id="collapseBootstrapicons" class="accordion-collapse collapse" aria-labelledby="headingBootstrapicons" data-bs-parent="#accordionBootstrapicons" style="">
         <div class="accordion-body">
         
-The MIT License (MIT)
+##### The MIT License (MIT)
 
 Copyright (c) 2019-2024 The Bootstrap Authors
 

@@ -1,26 +1,22 @@
 {
-  "name": "datas",
-  "version": "1.0.0",
-  "description": "Meowdream Hub",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MeowLynxSea/MeowdreamHub_Web.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/MeowLynxSea/MeowdreamHub_Web/issues"
-  },
-  "homepage": "https://github.com/MeowLynxSea/MeowdreamHub_Web#readme",
-  "dependencies": {
-    "body-parser": "^1.20.2",
-    "cookie-parser": "^1.4.6",
-    "express": "^4.19.2",
-    "multer": "^1.4.5-lts.1"
-  }
+    "name": "datas",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "start": "node ./bin/www",
+        "devstart": "nodemon ./bin/www"
+    },
+    "dependencies": {
+        "cookie-parser": "~1.4.4",
+        "debug": "~2.6.9",
+        "express": "^4.19.2",
+        "http-errors": "~1.6.3",
+        "jade": "^0.29.0",
+        "jsonwebtoken": "^9.0.2",
+        "morgan": "~1.9.1",
+        "sqlite3": "^5.1.7"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.0"
+    }
 }

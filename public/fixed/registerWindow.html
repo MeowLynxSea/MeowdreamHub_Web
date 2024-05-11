@@ -17,27 +17,85 @@
         <!-- Right Half -->
         <div class="col-md-7 content-right">
             <div class="content content-r">
-                <form>
-                    <div class="form-group">
-                        <label for="inputEmail" class="form-label inwindow">账户</label>
-                        <input type="email" class="form-control inwindow" id="inputEmail" placeholder="请输入邮箱">
-                    </div>
-                    <div class="form-group">
-                        <label for="inputPassword" class="form-label inwindow">密码</label>
-                        <input type="password" class="form-control inwindow" id="inputPassword" placeholder="请输入密码">
-                    </div>
-                    <div class="form-group">
-                        <small class="inwindow" style="color: var(--gray-150);">允许出现数字、大写、小写字母、!#$%^&*<br>至少包含其中2种，长度在8-16之间</small>
-                        <div class="alert alert-danger alert-dismissible fade show inwindow" style="display: none;"></div>
-                    </div>
-                    <div class="form-group button-group">
-                        <button type="button" class="btn btn-secondary inwindow" hx-get="/fixed/loginWindow.html" hx-target="#upperWindow" hx-trigger="click" hx-indicator="#loader" hx-swap="innerHTML">去注册</button>
-                        <div style="width: 10px;"></div>
-                        <!-- Spacer -->
-                        <button type="submit" class="btn btn-primary inwindow">注册</button>
-                    </div>
-                </form>
+                <div id="error-tip" class="alert alert-dismissible fade show inwindow" style="display: none;"></div>
+                <div class="form-group">
+                    <label for="inputEmail" class="form-label inwindow">账户</label>
+                    <input type="email" class="form-control inwindow" id="inputEmail" placeholder="请输入邮箱">
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword" class="form-label inwindow">密码</label>
+                    <input type="password" class="form-control inwindow" id="inputPassword" placeholder="请输入密码">
+                </div>
+                <div class="form-group">
+                    <small class="inwindow" style="color: var(--gray-150);">允许出现数字、大写、小写字母、!#$%^&*<br>至少包含其中2种，长度在8-16之间</small>
+                </div>
+                <div class="form-group button-group">
+                    <button type="button" class="btn btn-secondary inwindow" hx-get="/fixed/loginWindow.html" hx-target="#upperWindow" hx-trigger="click" hx-indicator="#loader" hx-swap="innerHTML">去登录</button>
+                    <div style="width: 10px;"></div>
+                    <!-- Spacer -->
+                    <button type="button" class="btn btn-primary inwindow" onclick="registerUser()">注册</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function registerUser() {
+        var email = $('#inputEmail').val();
+        var password = $('#inputPassword').val();
+
+        // Validate email format
+        if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+            $('#error-tip').removeClass('alert-success').addClass('alert-danger').text('邮箱格式错误').show();
+            return;
+        }
+
+        // Validate password format
+        if (!password.match(/^(?![\d]+$)(?![a-z]+$)(?![A-Z]+$)(?![!#$%^&*]+$)[\da-zA-z!#$%^&*]{8,16}$/)) {
+            $('#error-tip').removeClass('alert-success').addClass('alert-danger').text('密码格式错误').show();
+            return;
+        }
+
+        // Encrypt password with MD5 and generate salt
+        var salt = generateSalt(12);
+        var encryptedPassword = CryptoJS.MD5(password).toString() + salt;
+
+        // AJAX request to register user
+        $.ajax({
+            type: 'POST',
+            url: '/api/user/register',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                mail: email,
+                password: encryptedPassword
+            }),
+            success: function(data, textStatus, xhr) {
+                if (xhr.status === 201) {
+                    $('#error-tip').removeClass('alert-danger').addClass('alert-success').text(data.message).show();
+                    // Store token in localStorage
+                    localStorage.setItem('accessToken', data.token);
+                    // Redirect to dashboard after 3 seconds
+                    setTimeout(function() {
+                        window.location.href = '/dashboard.html';
+                    }, 3000);
+                } else {
+                    $('#error-tip').removeClass('alert-success').addClass('alert-danger').text(data.error).show();
+                }
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                $('#error-tip').removeClass('alert-success').addClass('alert-danger').text('服务器错误').show();
+            }
+        });
+    }
+
+    function generateSalt(length) {
+        var charset = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        var salt = '';
+        for (var i = 0; i < length; i++) {
+            var index = Math.floor(Math.random() * charset.length);
+            salt += charset.charAt(index);
+        }
+        return salt;
+    }
+</script>

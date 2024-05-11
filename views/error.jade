@@ -1,0 +1,30 @@
+doctype html
+html(lang="zh-CN")
+
+  head
+    // 设置文档编码和视口
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Meowdream - Error
+    // 引入 Bootstrap CSS
+    link(href="/assets/css/bootstrap.min.css", rel="stylesheet")
+    link(href="/assets/css/bootstrap-icons.min.css", rel="stylesheet")
+    // 引入自定义样式
+    link(href="/assets/css/meowdream-better-links.css", rel="stylesheet")
+    link(href="/assets/css/meowdream-colors.css", rel="stylesheet")
+    script(src="/assets/js/meowdream-fetch-fix.js")
+
+  body(style="display: flex; justify-content: center; align-items: center; height: 100vh;")
+    // 页面内容
+    .container.py-4
+      h1.my-4 Error #{error.status} #{error.message}
+      div.my-3
+        strong 啊哦，出了一点点故障...
+      div.my-3
+        button.btn.btn-secondary(onclick="window.location.href='/'") 返回主页
+      br
+      h4.my-2 POWERED BY
+      h2.my-2 Meowdream Studio
+    // 引入 Bootstrap JS
+    script(src="/assets/js/bootstrap.bundle.min.js")
+    script(src="/assets/js/meowdream-utils.js")

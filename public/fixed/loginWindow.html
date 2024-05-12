@@ -33,10 +33,67 @@
                         <button type="button" class="btn btn-secondary inwindow" hx-get="/fixed/registerWindow.html" hx-target="#upperWindow" hx-trigger="click" hx-indicator="#loader" hx-swap="innerHTML">去注册</button>
                         <div style="width: 10px;"></div>
                         <!-- Spacer -->
-                        <button type="submit" class="btn btn-primary inwindow">登录</button>
+                        <button type="button" class="btn btn-primary inwindow" onclick="loginUser()">登录</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function loginUser() {
+        var email = $('#inputEmail').val();
+        var password = $('#inputPassword').val();
+
+        // Generate salt
+        var salt = generateSalt(12);
+        // Encrypt password with MD5 and salt
+        var encryptedPassword = CryptoJS.MD5(password).toString() + salt;
+
+        // AJAX request to login user
+        $.ajax({
+            type: 'POST',
+            url: '/api/user/auth/login',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                mail: email,
+                password: encryptedPassword
+            }),
+            success: function(data, textStatus, xhr) {
+                if (xhr.status === 200) {
+                    $('#error-tip').removeClass('alert-danger').addClass('alert-success').text(data.message).show();
+                    // Store token in localStorage
+                    localStorage.setItem('accessToken', data.token);
+                    // Redirect to dashboard after 3 seconds
+                    setTimeout(function() {
+                        window.location.href = '/dashboard.html';
+                    }, 3000);
+                } else {
+                    $('#error-tip').removeClass('alert-success').addClass('alert-danger').text(data.error).show();
+                }
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                if (xhr.status === 401) {
+                    var errorMessage = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : 'Unknown error';
+                    $('#error-tip').removeClass('alert-success').addClass('alert-danger').text(errorMessage).show();
+                } else if (xhr.status === 500) {
+                    var errorMessage = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : 'Server error';
+                    $('#error-tip').removeClass('alert-success').addClass('alert-danger').text(errorMessage).show();
+                } else {
+                    $('#error-tip').removeClass('alert-success').addClass('alert-danger').text('Unknown error').show();
+                }
+            }
+        });
+    }
+
+    function generateSalt(length) {
+        var charset = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        var salt = '';
+        for (var i = 0; i < length; i++) {
+            var index = Math.floor(Math.random() * charset.length);
+            salt += charset.charAt(index);
+        }
+        return salt;
+    }
+</script>

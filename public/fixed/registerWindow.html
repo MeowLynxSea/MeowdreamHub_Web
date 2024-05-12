@@ -64,7 +64,7 @@
         // AJAX request to register user
         $.ajax({
             type: 'POST',
-            url: '/api/user/register',
+            url: '/api/user/auth/register',
             contentType: 'application/json',
             data: JSON.stringify({
                 mail: email,
@@ -73,8 +73,7 @@
             success: function(data, textStatus, xhr) {
                 if (xhr.status === 201) {
                     $('#error-tip').removeClass('alert-danger').addClass('alert-success').text(data.message).show();
-                    // Store token in localStorage
-                    localStorage.setItem('accessToken', data.token);
+                    document.cookie = 'accessToken=' + data.token + '; path=/';
                     // Redirect to dashboard after 3 seconds
                     setTimeout(function() {
                         window.location.href = '/dashboard.html';
@@ -84,7 +83,15 @@
                 }
             },
             error: function(xhr, textStatus, errorThrown) {
-                $('#error-tip').removeClass('alert-success').addClass('alert-danger').text('服务器错误').show();
+                if (xhr.status === 400) {
+                    var errorMessage = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : 'Unknown error';
+                    $('#error-tip').removeClass('alert-success').addClass('alert-danger').text(errorMessage).show();
+                } else if (xhr.status === 500) {
+                    var errorMessage = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : 'Server error';
+                    $('#error-tip').removeClass('alert-success').addClass('alert-danger').text(errorMessage).show();
+                } else {
+                    $('#error-tip').removeClass('alert-success').addClass('alert-danger').text('Unknown error').show();
+                }
             }
         });
     }

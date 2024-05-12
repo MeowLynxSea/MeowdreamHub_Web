@@ -8,7 +8,8 @@ const sqlite3 = require('sqlite3').verbose();
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 
-var userRouter = require('./routes/user');
+var userAuthRouter = require('./routes/user.auth');
+var userMgrRouter = require('./routes/user.mgr');
 
 const db = new sqlite3.Database('data.sqlite3', (err) => {
     if (err) {
@@ -92,9 +93,12 @@ const authenticateJWT = (req, res, next) => {
     }
 };
 
-app.use('/api/user/auth', userRouter);
-app.use('/api/open', userRouter);
+app.use('/api/user/auth', userAuthRouter);
+//app.use('/api/open', some routes here);
+
 app.use(authenticateJWT);
+
+app.use('/api/user/mgr', userMgrRouter);
 
 app.use('/public', (req, res, next) => {
     const url = req.originalUrl;
@@ -114,6 +118,8 @@ app.use(function(err, req, res, next) {
     res.locals.error = req.app.get('env') === 'development' ? err : {};
     res.status(err.status || 500);
     if (err.status === 404) {
+        res.render('error');
+    } else if (err.status === 403) {
         res.render('error');
     } else {
         res.render('error');

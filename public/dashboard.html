@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <!-- 设置文档编码和视口 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meowdream - Dashboard</title>
+    <!-- 引入 Bootstrap CSS -->
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- 引入 htmx JS -->
+    <script src="/assets/js/htmx.min.js"></script>
+    <!-- 引入 highlight.js CSS -->
+    <link rel="stylesheet" href="/assets/css/highlight.js/monokai-sublime.css">
+    <!-- 引入 highlight.js JS -->
+    <script src="/assets/js/highlight.min.js"></script>
+    <!-- 引入自定义样式 -->
+    <link href="/assets/css/meowdream-better-links.css" rel="stylesheet">
+    <link href="/assets/css/meowdream-colors.css" rel="stylesheet">
+    <link href="/assets/css/meowdream-custom.css" rel="stylesheet">
+    <script src="/assets/js/meowdream-fetch-fix.js"></script>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h2>User Data</h2>
+        <div id="userData">
+            <!-- Data will be loaded here -->
+        </div>
+        <button id="clearCookieBtn" class="btn btn-primary mt-3">Logout</button>
+    </div>
+
+    <script src="/assets/js/meowdream-utils.js"></script>
+
+    <script src="/assets/js/jquery-3.7.1.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Function to clear all cookies
+            function clearAllCookies() {
+                var cookies = document.cookie.split(";");
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i];
+                    var eqPos = cookie.indexOf("=");
+                    var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;";
+                }
+            }
+
+            // Button click event handler
+            $('#clearCookieBtn').click(function() {
+                // Clear all cookies
+                clearAllCookies();
+                // Change button text and disable button
+                $(this).text('Success').attr('disabled', true);
+                // Wait for 3 seconds and then refresh the page
+                setTimeout(function() {
+                    location.reload();
+                }, 3000);
+            });
+
+            // Fetch data from API
+            $.ajax({
+                url: "/api/user/mgr/everything",
+                type: "GET",
+                success: function(data) {
+                    // Process data and populate content
+                    if (data && data.length > 0) {
+                        var userDataHtml = '';
+                        data.forEach(function(user) {
+                            userDataHtml += '<h4>UID: ' + user.uid + '</h4>';
+                            userDataHtml += '<p>Email: ' + user.mail + '</p>';
+                            userDataHtml += '<p>Nickname: ' + user.nickname + '</p>';
+                            userDataHtml += '<p>Password: ' + user.password + '</p>';
+                            userDataHtml += '<p>Salt: ' + user.salt + '</p>';
+                            userDataHtml += '<p>Data QQ: ' + user.data_qq + '</p>';
+                            userDataHtml += '<hr>';
+                        });
+                        $('#userData').html(userDataHtml);
+                    } else {
+                        $('#userData').html('<p>No data available</p>');
+                    }
+                },
+                error: function() {
+                    $('#userData').html('<p>Error fetching data</p>');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

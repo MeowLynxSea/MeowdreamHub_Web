@@ -146,6 +146,13 @@
             .nav-item {
                 height: 50px;
             }
+            #closeWindowButton {
+                transform: scale(2);
+                top: 48px;
+                /* Adjust top margin */
+                right: 48px;
+                /* Adjust right margin */
+            }
         }
         
         @media only screen and (min-width: 768px) {
@@ -187,7 +194,7 @@
                     </li>
 
                     <li class="nav-item mx-3">
-                        <button style="border-radius: 30% / 100%;" class="btn btn-primary btn-in-nav mx-1" hx-get="/fixed/loginWindow.html" hx-target="#upperWindow" hx-trigger="click" hx-indicator="#loader" hx-swap="innerHTML" onclick="showUpperWindow()">
+                        <button style="border-radius: 30% / 100%;" class="btn btn-primary btn-in-nav mx-1" hx-get="/fixed/loginWindow.html" hx-target="#upperWindow" hx-trigger="click" hx-indicator="#loader" hx-swap="innerHTML" onclick="checkUserAuth()">
                   <span style="margin: 0 5px;"></span>开始使用<span style="margin: 0 5px;"><i class="bi-person"></i></span>
                 </button>
                     </li>
@@ -201,7 +208,7 @@
         <h1 class="display-5 my-3" style="color: var(--gray-50);">Meowdream Hub</h1>
         <h1 class="display-2 my-4" style="color: var(--gray-50);">简单、高效的</h1>
         <h2 class="display-4 mt-3 mb-5" style="color: var(--gray-50);">Minecraft服务器管理解决方案</h2>
-        <button style="border-radius: 30% / 100%;" class="btn btn-primary btn-lg mx-1 my-2" hx-get="/fixed/loginWindow.html" hx-target="#upperWindow" hx-trigger="click" hx-indicator="#loader" hx-swap="innerHTML" onclick="showUpperWindow()">
+        <button style="border-radius: 30% / 100%;" class="btn btn-primary btn-lg mx-1 my-2" hx-get="/fixed/loginWindow.html" hx-target="#upperWindow" hx-trigger="click" hx-indicator="#loader" hx-swap="innerHTML" onclick="checkUserAuth()">
             <span style="margin: 0 5px;"></span>开始使用<span style="margin: 0 5px;"></span><i class="bi-arrow-right"></i><span style="margin: 0 2px;"></span>
         </button>
         <button style="border-radius: 30% / 100%;" class="btn btn-secondary btn-lg mx-1 my-2" onclick="window.location.href = '/docs.html?read=/docs/download/readme.md';">
@@ -237,6 +244,23 @@
     <script src="/assets/js/jquery-3.7.1.min.js"></script>
     <script src="/assets/js/crypto-js.min.js"></script>
     <script>
+        function checkUserAuth() {
+            // 发送 GET 请求到 /api/user/auth
+            fetch('/api/user/auth')
+                .then(response => {
+                    if (response.ok) {
+                        // 如果返回 200 OK，表示用户已登录
+                        window.location.href = '/dashboard.html'; // 跳转到仪表盘页面
+                    } else {
+                        // 否则，用户未登录，继续 htmx 事件
+                        showUpperWindow();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking user authentication:', error);
+                });
+        }
+
         function showUpperWindow() {
             document.getElementById('overlay').style.visibility = 'visible';
             document.getElementById('overlay').style.opacity = '0.75'; /* 设置遮罩层透明度为60% */

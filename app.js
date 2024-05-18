@@ -10,20 +10,43 @@ const jwt = require('jsonwebtoken');
 
 var userAuthRouter = require('./routes/user.auth');
 var userMgrRouter = require('./routes/user.mgr');
+var uiDashboardRouter = require('./routes/ui.dashboard');
 
 const db = new sqlite3.Database('data.sqlite3', (err) => {
     if (err) {
         console.error(err.message);
     } else {
-        console.log('[Init] Connected to the SQLite database.');
+        console.log('[DB] Connected to the SQLite database.');
         db.run(`CREATE TABLE IF NOT EXISTS user (
-          uid INTEGER PRIMARY KEY AUTOINCREMENT,
-          mail TEXT NOT NULL UNIQUE,
-          nickname TEXT NOT NULL,
-          password TEXT NOT NULL,
-          salt TEXT NOT NULL,
-          data_qq TEXT
-      )`);
+            uid INTEGER PRIMARY KEY AUTOINCREMENT,
+            mail TEXT NOT NULL UNIQUE,
+            nickname TEXT NOT NULL,
+            password TEXT NOT NULL,
+            salt TEXT NOT NULL,
+            data_qq TEXT,
+            consumption INTEGER DEFAULT 0,
+            limitation INTEGER DEFAULT -1
+        )`, (err) => {
+            if (err) {
+                console.error('[DB] Error creating user table:', err.message);
+            } else {
+                console.log('[DB] User table created/verified successfully.');
+            }
+        });
+        db.run(`CREATE TABLE IF NOT EXISTS server (
+            name TEXT NOT NULL,
+            description TEXT,
+            remark TEXT,
+            last_online TEXT,
+            id TEXT NOT NULL UNIQUE,
+            token TEXT NOT NULL UNIQUE
+        )`, (err) => {
+            if (err) {
+                console.error('[DB] Error creating server table:', err.message);
+            } else {
+                console.log('[DB] Server table created/verified successfully.');
+            }
+        });
     }
 });
 
@@ -99,6 +122,7 @@ app.use('/api/user/auth', userAuthRouter);
 app.use(authenticateJWT);
 
 app.use('/api/user/mgr', userMgrRouter);
+app.use('/dashboard', uiDashboardRouter);
 
 app.use('/public', (req, res, next) => {
     const url = req.originalUrl;
@@ -107,6 +131,11 @@ app.use('/public', (req, res, next) => {
     } else {
         next();
     }
+});
+
+app.get('/error/:code', (req, res, next) => {
+    const errorCode = req.params.code;
+    next(createError(Number(errorCode)));
 });
 
 app.use(function(req, res, next) {

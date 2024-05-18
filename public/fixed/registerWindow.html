@@ -76,7 +76,7 @@
                     document.cookie = 'accessToken=' + data.token + '; path=/';
                     // Redirect to dashboard after 3 seconds
                     setTimeout(function() {
-                        window.location.href = '/dashboard.html';
+                        window.location.href = '/dashboard';
                     }, 3000);
                 } else {
                     $('#error-tip').removeClass('alert-success').addClass('alert-danger').text(data.error).show();

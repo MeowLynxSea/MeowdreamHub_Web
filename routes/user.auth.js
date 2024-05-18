@@ -10,17 +10,20 @@ const jwt = require('jsonwebtoken');
 const db = new sqlite3.Database('data.sqlite3');
 
 router.get('/auth', (req, res) => {
+    console.log("checking...");
     const token = req.cookies.accessToken;
     if (token) {
         jwt.verify(token, process.env.JWT_SECRET || '0123456789', (err, user) => {
             if (err) {
+                res.sendStatus(401);
+            } else {
                 res.sendStatus(200);
             }
-            req.user = user;
         });
     } else {
         res.sendStatus(401);
     }
+    res.end();
 });
 
 // 用户注册路由

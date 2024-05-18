@@ -245,12 +245,11 @@
     <script src="/assets/js/crypto-js.min.js"></script>
     <script>
         function checkUserAuth() {
-            // 发送 GET 请求到 /api/user/auth
-            fetch('/api/user/auth')
+            fetch('/api/user/auth/auth')
                 .then(response => {
                     if (response.ok) {
                         // 如果返回 200 OK，表示用户已登录
-                        window.location.href = '/dashboard.html'; // 跳转到仪表盘页面
+                        window.location.href = '/dashboard'; // 跳转到仪表盘页面
                     } else {
                         // 否则，用户未登录，继续 htmx 事件
                         showUpperWindow();

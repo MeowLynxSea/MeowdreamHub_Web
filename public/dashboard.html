@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>仪表盘</title>
+    <!-- Bootstrap CSS -->
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/assets/css/meowdream-colors.css" rel="stylesheet">
+    <link href="/assets/css/meowdream-login-window.css" rel="stylesheet">
+    <link href="/assets/css/meowdream-better-links.css" rel="stylesheet">
+    <!-- Custom styles -->
+    <style>
+        .roundButton {
+            width: 40px;
+            height: 40px;
+            background-color: var(--gray-500);
+            position: fixed;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            padding: 0px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+        }
+        
+        #openListButton {
+            z-index: 10;
+            bottom: 32px;
+            right: 32px;
+        }
+        
+        @media (min-width: 768px) {
+            #openListButton {
+                display: none;
+            }
+            .sidebar {
+                width: 16.6667%;
+                /* col-md-2 width */
+                max-width: 16.6667%;
+            }
+            #offcanvas-close-button {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+        
+        .offcanvas-body {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: space-between;
+        }
+        
+        .dropdown {
+            margin-top: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar as Offcanvas -->
+    <div class="offcanvas offcanvas-start sidebar" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="listOffcanvas" aria-labelledby="listOffcanvasLabel">
+        <div class="offcanvas-header">
+            <a href="/dashboard.html" class="align-items-center link-dark text-decoration-none">
+                <span class="mx-2 fs-4"><i class="bi-gear"></i><span class="mx-1"></span> 仪表盘</span>
+            </a>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" id="offcanvas-close-button"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div>
+                <hr>
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active" aria-current="page">
+                            <i class="bi-house"></i><span class="mx-1"></span> 概览
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link link-dark">
+                            <i class="bi-server"></i><span class="mx-1"></span> 实例
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link link-dark">
+                            <i class="bi-wallet2"></i><span class="mx-1"></span> 财务
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <hr>
+            <div class="dropdown ">
+                <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="/assets/image/default-avatar.png" alt="" width="32" height="32" class="rounded-circle me-2">
+                    <strong id="user-nickname">111</strong>
+                </a>
+                <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
+                    <li><a class="dropdown-item" href="#"><i class="bi-gear"></i><span class="mx-1"></span>管理</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="#" id="logoutButton" hx-target="#main-frame" hx-get="/loader.html" hx-trigger="click" hx-swap="innerHTML"><i class="bi-box-arrow-right"></i><span class="mx-1"></span>退出</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Button to open sidebar -->
+    <button id="openListButton" class="roundButton rounded-circle btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#listOffcanvas" aria-controls="listOffcanvas">
+        <i class="bi-list" style="color: white;"></i>
+    </button>
+
+    <!-- Main content area -->
+    <div class="container-fluid">
+        <div id="main-frame" class="col-md-10 offset-md-2" hx-get='/dashboard/profile' hx-trigger="load">
+            <!-- Your main content goes here -->
+            <h1>Loading...</h1>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+    <!-- htmx -->
+    <script src="/assets/js/htmx.min.js"></script>
+    <!-- jQuery -->
+    <script src="/assets/js/jquery-3.7.1.min.js"></script>
+    <!-- CryptoJS -->
+    <script src="/assets/js/crypto-js.min.js"></script>
+    <!-- Custom scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const offcanvasElement = document.getElementById('listOffcanvas');
+            const openListButton = document.getElementById('openListButton');
+
+            function handleResize() {
+                if (window.innerWidth < 768) {
+                    offcanvasElement.classList.remove('show');
+                    offcanvasElement.setAttribute('aria-hidden', 'true');
+                    openListButton.style.display = 'block';
+                } else {
+                    offcanvasElement.classList.add('show');
+                    offcanvasElement.setAttribute('aria-hidden', 'false');
+                    openListButton.style.display = 'none';
+                }
+            }
+
+            window.addEventListener('resize', handleResize);
+            handleResize();
+
+            const nicknameElement = document.getElementById('user-nickname');
+
+            fetch('/api/user/mgr/info')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    nicknameElement.textContent = data.nickname;
+                })
+                .catch(error => {
+                    nicknameElement.textContent = '请求错误';
+                });
+        });
+    </script>
+</body>
+
+</html>

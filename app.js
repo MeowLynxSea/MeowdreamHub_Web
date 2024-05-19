@@ -133,6 +133,15 @@ app.use('/public', (req, res, next) => {
     }
 });
 
+app.get('/errorpage/:code/:message', (req, res, next) => {
+    res.render('error', {
+        error: {
+            status: req.params.code,
+            message: req.params.message
+        }
+    });
+});
+
 app.get('/error/:code', (req, res, next) => {
     const errorCode = req.params.code;
     next(createError(Number(errorCode)));
@@ -145,7 +154,7 @@ app.use(function(req, res, next) {
 app.use(function(err, req, res, next) {
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
-    res.status(err.status || 500);
+    res.status(err.status || 200);
     if (err.status === 404) {
         res.render('error');
     } else if (err.status === 403) {
